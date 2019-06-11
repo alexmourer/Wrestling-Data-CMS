@@ -2,19 +2,15 @@
 
 <template>
   <div>
-    <button
-      title="Add New Wrestler"
-      class="addButton"
-      @click="addWrestler = true;setFocus()"
-    >+ Add Wrestler</button>
+    <button title="Add Match" class="addMatch" @click="addMatch = true;setFocus()">+ Add Match</button>
     <transition name="fade">
-      <div class="addWresler" v-if="addWrestler">
+      <div class="addWresler" v-if="addMatch">
         <form @submit.prevent="addWrestlerFunc(
-        name 
-      ); addWrestler = false">
-          <div @click="addWrestler = false" class="close">X</div>
-          <input ref="name" v-model="name" placeholder="Wrestler or Team Name">
-          <button class="update" type="submit">Add Wrestler</button>
+        matchTitle 
+      ); addMatch = false">
+          <div @click="addMatch = false" class="close">X</div>
+          <input ref="name" v-model="matchTitle" placeholder="Match Title">
+          <button class="update" type="submit">Add Match</button>
         </form>
       </div>
     </transition>
@@ -25,34 +21,36 @@
 import { db } from "../main";
 
 export default {
-  name: "HelloWorld",
+  name: "ShowMatchAdd",
   props: {
-    data: {
-      type: Array
+    showdata: {
+      type: String
     }
   },
   data() {
     return {
       stats: [],
-      name: "",
+      matchTitle: "",
       editField: "",
-      addWrestler: ""
+      addMatch: ""
     };
   },
   firestore() {
     return {
-      stats: db.collection("stats")
+      stats: db.collection("shows")
     };
   },
   methods: {
-    addWrestlerFunc(name) {
-      db.collection("stats")
-        .doc(name)
+    addWrestlerFunc(matchTitle) {
+      db.collection("shows")
+        .doc(this.showdata)
+        .collection("matches")
+        .doc(matchTitle)
         .set({
-          name: name
+          matchtitle: matchTitle
         });
       // Clear values
-      this.name = "";
+      this.matchTitle = "";
     },
     setFocus() {
       this.$nextTick(() => {
@@ -146,6 +144,23 @@ form {
   width: 80%;
   margin: 10% auto;
   background: #f2f2f2;
+}
+.addMatch {
+  background: #000;
+  border: 1px solid #000;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 6px 9px;
+  margin-top: 10px;
+  text-align: center;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  font-size: 0.8em;
+}
+.addMatch:hover {
+  background: #fff;
+  color: #000;
 }
 .update {
   display: block;

@@ -6,15 +6,15 @@
       title="Add New Wrestler"
       class="addButton"
       @click="addWrestler = true;setFocus()"
-    >+ Add Wrestler</button>
+    >+ Add Show</button>
     <transition name="fade">
       <div class="addWresler" v-if="addWrestler">
         <form @submit.prevent="addWrestlerFunc(
         name 
       ); addWrestler = false">
           <div @click="addWrestler = false" class="close">X</div>
-          <input ref="name" v-model="name" placeholder="Wrestler or Team Name">
-          <button class="update" type="submit">Add Wrestler</button>
+          <input ref="name" v-model="name" placeholder="Show Name">
+          <button class="update" type="submit">Add Show</button>
         </form>
       </div>
     </transition>
@@ -41,12 +41,12 @@ export default {
   },
   firestore() {
     return {
-      stats: db.collection("stats")
+      stats: db.collection("shows")
     };
   },
   methods: {
     addWrestlerFunc(name) {
-      db.collection("stats")
+      db.collection("shows")
         .doc(name)
         .set({
           name: name
